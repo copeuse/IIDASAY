@@ -25,5 +25,29 @@
   </audio>
 
   <h2>currently curated by <a href="https://n2v2.bandcamp.com">névé</a>, <a href="https://thanas1.bandcamp.com">louisæ</a> and <a href="https://score16.bandcamp.com">score16</a></h2>
+
+  <p id="current-title">Loading...</p>
+
+  <script>
+    // Fonction pour récupérer le titre et l'afficher
+    function updateTitle() {
+      fetch("https://radio.spaceghost.pink/status-json.xsl")
+        .then(response => response.json())
+        .then(data => {
+          const title = data.icestats.source.title;
+          document.getElementById("current-title").textContent = title;
+        })
+        .catch(error => {
+          console.error("Erreur :", error);
+          document.getElementById("current-title").textContent = "Impossible to fetch title";
+        });
+    }
+
+    // On appelle la fonction une première fois au chargement
+    updateTitle();
+
+    // Puis on la relance toutes les 10 secondes (10000 millisecondes)
+    setInterval(updateTitle, 10000);
+  </script>
 </body>
 </html>
