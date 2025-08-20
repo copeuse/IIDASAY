@@ -27,26 +27,38 @@
 
   <p id="current-title">Loading...</p>
 
-  <script>
-    // Fonction pour récupérer le titre et l'afficher
-    function updateTitle() {
-      fetch("https://radio.spaceghost.pink/status-json.xsl")
-        .then(response => response.json())
-        .then(data => {
-          const title = data.icestats.source.title;
-          document.getElementById("current-title").textContent = `♫ ${title} ♫`;
-        })
-        .catch(error => {
-          console.error("Erreur :", error);
-          document.getElementById("current-title").textContent = "Impossible to fetch title";
-        });
-    }
+<script>
+  // Fonction pour convertir les entités Unicode en caractères
+  function decodeUnicodeEntities(str) {
+    return str.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
+  }
 
-    // On appelle la fonction une première fois au chargement
-    updateTitle();
+  // Fonction pour récupérer le titre et l'afficher
+  function updateTitle() {
+    fetch("https://radio.spaceghost.pink/status-json.xsl")
+      .then(response => response.json())
+      .then(data => {
+        // on récupère le titre
+        let title = data.icestats.source.title;
 
-    // Puis on la relance toutes les 10 secondes (10000 millisecondes)
-    setInterval(updateTitle, 10000);
-  </script>
+        // on décode les entités Unicode
+        title = decodeUnicodeEntities(title);
+
+        // on affiche le titre
+        document.getElementById("current-title").textContent = `♫ ${title} ♫`;
+      })
+      .catch(error => {
+        console.error("Erreur :", error);
+        document.getElementById("current-title").textContent = "Impossible to fetch title";
+      });
+  }
+
+  // On appelle la fonction une première fois au chargement
+  updateTitle();
+
+  // Puis on la relance toutes les 10 secondes
+  setInterval(updateTitle, 10000);
+</script>
+
 </body>
 </html>
