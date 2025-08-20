@@ -34,7 +34,7 @@
         .then(response => response.json())
         .then(data => {
           const title = data.icestats.source.title;
-          document.getElementById("current-title").textContent = title;
+          document.getElementById("current-title").textContent = `♫ ${title} ♫`;
         })
         .catch(error => {
           console.error("Erreur :", error);
