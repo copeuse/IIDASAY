@@ -17,7 +17,7 @@
 </head>
 <body>
   <h1>INTERNET IS DYING AND SO ARE YOU</h1>
-  <h3>currently curated by <a href="https://n2v2.bandcamp.com">névé</a>, <a href="https://thanas1.bandcamp.com">louisæ</a> and <a href="https://score16.bandcamp.com">score16</a></h3>
+  <h3>currently curated by <a href="https://n2v2.bandcamp.com" target="_blank">névé</a>, <a href="https://thanas1.bandcamp.com" target="_blank">louisæ</a> and <a href="https://score16.bandcamp.com" target="_blank">score16</a></h3>
   
   <!-- Le lecteur audio -->
   <audio controls preload="none">
@@ -48,7 +48,7 @@
 
         // récup listeners
         let listeners = source.listeners ?? 0;
-        document.getElementById("current-listeners").innerHTML = `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay'>Maybe you’d like to chat all together?</a>" : ""}`;
+        document.getElementById("current-listeners").innerHTML = `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay' target="_blank">Maybe you’d like to chat all together?</a>" : ""}`;
 
       })
       .catch(error => {
