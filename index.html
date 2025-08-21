@@ -48,7 +48,7 @@
 
         // récup listeners
         let listeners = source.listeners ?? 0;
-        document.getElementById("current-listeners").textContent = `${listeners} listener${listeners !== 1 ? "s" : ""} online`;
+        document.getElementById("current-listeners").textContent = `${listeners} listener${listeners !== 1 ? "s" : ""} rn`;
       })
       .catch(error => {
         console.error("Erreur :", error);
