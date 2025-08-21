@@ -48,7 +48,8 @@
 
         // récup listeners
         let listeners = source.listeners ?? 0;
-        document.getElementById("current-listeners").textContent = `${listeners} listener${listeners !== 1 ? "s" : ""} rn`;
+        document.getElementById("current-listeners").innerHTML = `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay'>Maybe you’d like to chat all together?</a>" : ""}`;
+
       })
       .catch(error => {
         console.error("Erreur :", error);
