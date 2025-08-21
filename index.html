@@ -26,6 +26,7 @@
   </audio>
 
   <p id="current-title">Loading...</p>
+  <p id="current-listeners">Loading listeners...</p>
 
 <script>
   // Fonction pour convertir les entités Unicode en caractères
@@ -33,31 +34,34 @@
     return str.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
   }
 
-  // Fonction pour récupérer le titre et l'afficher
-  function updateTitle() {
+  // Fonction pour récupérer le titre et le nombre de listeners
+  function updateInfo() {
     fetch("https://radio.spaceghost.pink/status-json.xsl")
       .then(response => response.json())
       .then(data => {
-        // on récupère le titre
-        let title = data.icestats.source.title;
+        const source = data.icestats.source;
 
-        // on décode les entités Unicode
+        // récup titre
+        let title = source.title || "No title";
         title = decodeUnicodeEntities(title);
-
-        // on affiche le titre
         document.getElementById("current-title").textContent = `♫ ${title} ♫`;
+
+        // récup listeners
+        let listeners = source.listeners ?? 0;
+        document.getElementById("current-listeners").textContent = `👂 ${listeners} listener${listeners !== 1 ? "s" : ""} online`;
       })
       .catch(error => {
         console.error("Erreur :", error);
         document.getElementById("current-title").textContent = "Impossible to fetch title";
+        document.getElementById("current-listeners").textContent = "Impossible to fetch listeners";
       });
   }
 
-  // On appelle la fonction une première fois au chargement
-  updateTitle();
+  // premier appel
+  updateInfo();
 
-  // Puis on la relance toutes les 10 secondes
-  setInterval(updateTitle, 10000);
+  // refresh toutes les 10s
+  setInterval(updateInfo, 10000);
 </script>
 
 </body>
