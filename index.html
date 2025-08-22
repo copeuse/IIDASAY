@@ -110,41 +110,9 @@ async function updateInfo() {
     document.getElementById("current-title").textContent = "Impossible to fetch title";
     document.getElementById("current-listeners").textContent = "Impossible to fetch listeners";
   }
-}
 
-// premier appel
 updateInfo();
-// refresh toutes les 10s
-setInterval(updateInfo, 10000);
-</script>("current-listeners").innerHTML =
-      `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
 
-    //  fetch du nowplaying.json pour lien et cover
-    const responseJSON = await fetch("https://radio.spaceghost.pink/nowplaying/nowplaying.json", { cache: "no-store" });
-    const dataJSON = await responseJSON.json();
-
-    //  construction du HTML final
-    const titleHtml = dataJSON.url
-      ? `<a href="${dataJSON.url}" target="_blank" rel="noopener noreferrer">${title}</a>` 
-      : title;
-
-    const coverHtml = dataJSON.cover
-      ? `<img src="${dataJSON.cover}" alt="cover" style="max-width:200px;border-radius:10px;margin-top:8px;">`
-      : "";
-
-    // affichage
-    document.getElementById("current-title").innerHTML = `♫ ${titleHtml} ♫<br>${coverHtml}`;
-
-  } catch (error) {
-    console.error("Erreur :", error);
-    document.getElementById("current-title").textContent = "Impossible to fetch title";
-    document.getElementById("current-listeners").textContent = "Impossible to fetch listeners";
-  }
-}
-
-// premier appel
-updateInfo();
-// refresh toutes les 10s
 setInterval(updateInfo, 10000);
 </script>
 
