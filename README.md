@@ -8,7 +8,7 @@ add this mountpoint in /etc/mpd.conf:
 
 	audio_output {
 	    type        "shout"
-	    name        "whatever"		#same as icecast
+	    name        "whatever"		
 	    host        "yourLocalIP"	#same as icecast
 	    port        "8000"		      
 	    mount       "/mystream.mp3" 
