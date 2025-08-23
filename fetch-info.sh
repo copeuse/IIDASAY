@@ -2,12 +2,10 @@
 
 set -euo pipefail
 
-# PARAMS – adapte UNIQUEMENT ces 3 lignes à ton contexte :
-DOMAIN="radio.spaceghost.pink"      # ← remplace par TON domaine public (celui déjà utilisé pour Icecast/Caddy)
-MUSIC_DIR="$HOME/Music"    # ← où yt-dlp met les fichiers
-WEB_ROOT="/var/www/live-info"          # ← petit dossier PUBLIC que Caddy va servir (pas GitHub Pages)
+DOMAIN="radio.spaceghost.pink"  # ← REPLACE BY YOUR PUBLIC DOMAIN
+MUSIC_DIR="$HOME/Music"
+WEB_ROOT="/var/www/live-info"
 
-# on s’assure que l’arbo existe
 mkdir -p "$WEB_ROOT/covers"
 mkdir -p "$WEB_ROOT/np"
 
@@ -16,14 +14,13 @@ while true; do
   FILE=$(mpc --format "%file%" current || true)
 
   if [[ -z "${FILE}" ]]; then
-    echo "[INFO] Rien ne joue pour l’instant"
+    echo "[INFO] Nothing is playing rn"
     jq -n --arg t "—" --arg u "" --arg c "" \
       '{title:$t, url:$u, cover:$c}' > "$WEB_ROOT/np/nowplaying.json"
     sleep 10
     continue
   fi
 
-  # on enlève juste l’extension, mais on garde les sous-dossiers
   BASENAME="${FILE%.*}"
 
   INFOFILE="$MUSIC_DIR/$BASENAME.info.json"
