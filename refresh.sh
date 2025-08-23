@@ -17,21 +17,19 @@ mkdir ~/Music/refresh
 
 current_section=""
 while IFS= read -r line; do
-    # Ignorer les lignes vides ou commentaires
+    
     [[ -z "$line" || "$line" =~ ^# ]] && continue
 
-    # Détection des sections
     if [[ "$line" =~ ^\[(.*)\]$ ]]; then
         current_section="${BASH_REMATCH[1]}"
         continue
     fi
 
-    # Si on est dans une section, télécharger le lien
     if [[ -n "$current_section" ]]; then
         folder="$BASE_DIR/$current_section"
         mkdir -p "$folder"
 
-        echo ">>> Téléchargement dans $folder : $line"
+        echo ">>> Download in $folder : $line"
         $YTDLP --paths "$folder" --output "%(title)s -- %(uploader)s.%(ext)s" "$line"
     fi
 done < "$PLAYLIST_FILE"
@@ -45,7 +43,7 @@ mv ~/Archive-refresh ~/Archive
 mpc update --wait
 
     HOUR=$(date +%H)
-    TODAY=$(date +%Y-%m-%d)   # date du jour
+    TODAY=$(date +%Y-%m-%d)
     if [ "$HOUR" -ge 8 ] && [ "$HOUR" -lt 12 ]; then
         PLAYLIST="webradio/morning"
     elif [ "$HOUR" -ge 12 ] && [ "$HOUR" -lt 17 ]; then
