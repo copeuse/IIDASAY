@@ -1,12 +1,9 @@
 #!/bin/bash
 
-# Fichier contenant les playlists
 PLAYLIST_FILE="playlist.txt"
 
-# Répertoire de base pour la musique
 BASE_DIR="$HOME/Music/refresh"
 
-# Commande yt-dlp de base
 YTDLP="yt-dlp --force-ipv4 --ignore-errors --format bestaudio \
 --extract-audio --audio-format mp3 --audio-quality 160K \
 --embed-thumbnail --embed-metadata \
@@ -18,7 +15,6 @@ rm -r ~/Music/refresh
 rm ~/Archive-refresh
 mkdir ~/Music/refresh
 
-# Parsing du fichier playlists.txt
 current_section=""
 while IFS= read -r line; do
     # Ignorer les lignes vides ou commentaires
