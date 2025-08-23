@@ -59,6 +59,41 @@ in fetch-info.sh replace my domain with your domain, the same you put in caddy
 
 	DOMAIN="radio.spaceghost.pink"  # ← REPLACE BY YOUR PUBLIC DOMAIN
 
+create a colaborative txt, and put the raw link into a file called ~/colab.txt
+here is an exemple of a colaborative txt: 
+	
+	[morning]
+	https://soundcloud.com/n2v2/sets/1
+	https://soundcloud.com/louisaeae/sets/1
+	https://youtube.com/playlist?list=JFOZNoinaofne
+	
+	[afternoon]
+	https://soundcloud.com/n2v2/sets/2
+	https://soundcloud.com/louisaeae/sets/2
+	https://youtube.com/playlist?list=blablaFRRINe
+	
+	[evening]
+	https://soundcloud.com/n2v2/sets/3
+	https://soundcloud.com/louisaeae/sets/3
+	https://youtube.com/playlist?list=bjqfnieuNFIEUNvjzzi
+	
+	[night]
+	https://soundcloud.com/n2v2/sets/4
+	https://soundcloud.com/louisaeae/sets/4
+	https://youtube.com/playlist?list=fiIFJfiejF
+	
+	[after]
+	https://soundcloud.com/n2v2/sets/5
+	https://soundcloud.com/louisaeae/sets/5
+	https://youtube.com/playlist?list=foiOFJfeio
+	
+	[sleep]
+	https://soundcloud.com/n2v2/sets/6
+	https://soundcloud.com/louisaeae/sets/6
+	https://youtube.com/playlist?list=dijenfOFNIGeijgn
+
+configure type A DNS like radio.domain.public answer your public IP
+
 enable systemd for icecast, mpd, caddy then create and enable a service for radio-start.sh and fetch-info.sh
 
 your stream should be available at https://radio.domain.public/mystream.mp3
