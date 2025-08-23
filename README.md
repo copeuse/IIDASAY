@@ -22,7 +22,8 @@ set this as your music directiory in /etc/mpd.conf
 
 
 create dir ~/Music/webradio
-create dir /var/www/live-info and give permission to your current user and caddy
+
+create dir /var/www/live-info give permission to your current user and caddy
 
 config caddy /etc/caddy/Caddyfile :
 
