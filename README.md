@@ -7,7 +7,7 @@ just add basic info in icecast and add this mountpoint in /etc/mpd.conf:
 	audio_output {
 	    type        "shout"
 	    name        "whatever"
-	    host        "meme IP que icecast (IP local de du serv"
+	    host        "same as icecast, local IP"
 	    port        "8000"		      # port par défaut
 	    mount       "/mon-stream.mp3"     # mets l’extension .mp3
 	    password    "hackme"              # meme mdp que icecast
