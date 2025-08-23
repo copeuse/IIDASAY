@@ -1,19 +1,21 @@
+INTERNET IS DYING AND SO ARE YOU
 
+dependence : icecast mpd mpc yt-dlp caddy
 
-dependence : icecast mpd mpc ytdlp caddy
+add basic info in icecast during install, hostname = your local IP
 
-just add basic info in icecast and add this mountpoint in /etc/mpd.conf:
+add this mountpoint in /etc/mpd.conf:
 
 	audio_output {
 	    type        "shout"
 	    name        "whatever"
-	    host        "same as icecast, local IP"
-	    port        "8000"		      # port par défaut
-	    mount       "/mon-stream.mp3"     # mets l’extension .mp3
-	    password    "hackme"              # meme mdp que icecast
-	    encoder     "lame"                # ou "shine" si LAME n’est pas dispo
-	    bitrate     "128"                 # ou, alternativement: quality "2" (VBR)
-	    format      "44100:16:2"          # échantillonnage fixe requis
+	    host        "yourLocalIP"
+	    port        "8000"		      
+	    mount       "/mystream.mp3"     
+	    password    "hackme"             
+	    encoder     "lame"                
+	    bitrate     "128"                 
+	    format      "44100:16:2"
 	}
 
 set this as your music directiory in /etc/mpd.conf 
@@ -49,11 +51,20 @@ config caddy /etc/caddy/Caddyfile :
 	          }
 		}
 		handle {
-		 reverse_proxy IPLOCAL:8000
+		 reverse_proxy yourLocalIP:8000
 		}
 	}
 
-enable systemd for icecast, mpd, caddy, and create and enable a service for radio-start.sh and fetch-info.sh
+in fetch-info.sh replace my domain with your domain, the same you put in caddy
+
+	DOMAIN="radio.spaceghost.pink"  # ← REPLACE BY YOUR PUBLIC DOMAIN
+
+enable systemd for icecast, mpd, caddy then create and enable a service for radio-start.sh and fetch-info.sh
+
+your stream should be available at https://radio.domain.public/mystream.mp3
+you should find URL and cover of the current track at https://radio.domain.public/nowplaying.json
+
+my index.html works for https://radio.spaceghost.pink but i guess u can just copy my js and change URL, just know that, the whole js is mostly vibe coded as i rly didnt wanted to learn javascript 
 
 force refresh : nohup ~/refresh.sh > ~/refresh.log 2>&1 & disown
 
