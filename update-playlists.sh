@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Fichier contenant les playlists
+curl -sL "$(cat ~/colab.txt)" -o playlist.txt
 PLAYLIST_FILE="playlist.txt"
 
 # Répertoire de base pour la musique

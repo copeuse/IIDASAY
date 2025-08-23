@@ -23,7 +23,6 @@ while true; do
 
         # exécuter la mise à jour une seule fois par jour
         if [ "$LAST_UPDATE_DATE" != "$TODAY" ]; then
-            curl -sL "$(cat ~/colab.txt)" -o playlist.txt
             bash ~/update-playlist.sh &
             LAST_UPDATE_DATE="$TODAY"
         fi
