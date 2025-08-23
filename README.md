@@ -94,8 +94,7 @@ here is an exemple of a colaborative txt:
 
 configure type A DNS like radio.domain.public answer your public IP
 
-u can now run update-playlists.sh and wait for your tracks to download
-enable systemd for icecast, mpd, caddy then create and enable a service for radio-start.sh and fetch-info.sh
+u can now run update-playlists.sh and wait for your tracks to download then enable systemd for icecast, mpd, caddy then create and enable a service for radio-start.sh and fetch-info.sh
 
 your stream should be available at https://radio.domain.public/mystream.mp3
 you should find URL and cover of the current track at https://radio.domain.public/nowplaying.json
