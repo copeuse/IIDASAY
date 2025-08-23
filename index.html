@@ -9,9 +9,7 @@
   <style>
     body {
       font-family: "Source Code Pro", monospace;
-      font-optical-sizing: auto;
       font-weight: 400;
-      font-style: normal;
       text-align: center;
       padding: 50px;
       background: #fdf0f5;
@@ -19,11 +17,17 @@
     audio {
       width: 300px;
     }
+    #cover {
+      max-width: 300px;
+      margin: 20px auto;
+      display: block;
+      border-radius: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>INTERNET IS DYING AND SO ARE YOU</h1>
-  <h3>currently curated by <a href="https://n2v2.bandcamp.com" target="_blank">névé</a>, <a href="https://thanas1.bandcamp.com" target="_blank">louisæ</a> and <a href="https://score16.bandcamp.com" target="_blank">score16</a></h3>
+  <h3>currently curated by <a href="https://n2v2.bandcamp.com" target="_blank">névé</a>, <a href="https://thanas1.bandcamp.com" target="_blank">louisæ</a>, <a href="https://score16.bandcamp.com" target="_blank">score16</a> and <a href="https://mathildab.bandcamp.com" target="_blank">mathilda b</a></h3>
   
   <!-- Le lecteur audio -->
   <audio controls preload="none" style="margin: 25px">
@@ -31,6 +35,12 @@
     HTML5 audio not supported by your browser.
   </audio>
 
+  <!-- Cover -->
+  <a id="cover-link" href="#" target="_blank" style="display:none;">
+    <img id="cover" src="" alt="Current cover">
+  </a>
+
+  <!-- Titre -->
   <p id="current-title">Loading...</p>
   <p id="current-listeners">Loading listeners...</p>
 
@@ -44,78 +54,64 @@
  　／￣|    |　|　|    
 　| (￣ヽ＿__ヽ_)__)     \＿＿/ <-- bol vide!! (╬ Ò﹏Ó)
  　＼二つ</p>
-<div id="current-title">Chargement…</div>
-<div id="current-listeners"></div>
 
 <script>
-function decodeUnicodeEntities(str) {
-  return str.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
-}
-
-async function updateInfo() {
-  try {
-    //  fetch du titre et des listeners depuis Icecast
-    const responseIcecast = await fetch("https://radio.spaceghost.pink/status-json.xsl");
-    const dataIcecast = await responseIcecast.json();
-    const source = dataIcecast.icestats.source;
-
-    // récup titre depuis Icecast
-    let title = source.title || "No title";
-    title = decodeUnicodeEntities(title);
-
-    // récup listeners
-    let listeners = source.listeners ?? 0;
-    document.getElementById<div id="current-title">Chargement…</div>
-<div id="current-listeners"></div>
-
-<script>
-function decodeUnicodeEntities(str) {
-  return str.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
-}
-
-async function updateInfo() {
-  try {
-    // fetch du titre et des listeners depuis Icecast
-    const responseIcecast = await fetch("https://radio.spaceghost.pink/status-json.xsl");
-    const dataIcecast = await responseIcecast.json();
-    const source = dataIcecast.icestats.source;
-
-    // récup titre depuis Icecast
-    let title = source.title || "No title";
-    title = decodeUnicodeEntities(title);
-
-    // récup listeners
-    let listeners = source.listeners ?? 0;
-    document.getElementById("current-listeners").innerHTML =
-      `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
-
-    // fetch du nowplaying.json pour lien et cover
-    const responseJSON = await fetch("https://radio.spaceghost.pink/nowplaying/nowplaying.json", { cache: "no-store" });
-    const dataJSON = await responseJSON.json();
-
-    // construction du HTML final
-    const titleHtml = dataJSON.url
-      ? `<a href="${dataJSON.url}" target="_blank" rel="noopener noreferrer">${title}</a>` 
-      : title;
-
-    const coverHtml = dataJSON.cover
-      ? `<img src="${dataJSON.cover}" alt="cover" style="max-width:200px;border-radius:10px;margin-top:8px;">`
-      : "";
-
-    // affichage
-    document.getElementById("current-title").innerHTML = `♫ ${titleHtml} ♫<br>${coverHtml}`;
-
-  } catch (error) {
-    console.error("Erreur :", error);
-    document.getElementById("current-title").textContent = "Impossible to fetch title";
-    document.getElementById("current-listeners").textContent = "Impossible to fetch listeners";
+  // Fonction pour convertir les entités Unicode en caractères
+  function decodeUnicodeEntities(str) {
+    return str.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
   }
 
-updateInfo();
+  async function updateInfo() {
+    try {
+      // --- Récup infos titre et listeners ---
+      const statusRes = await fetch("https://radio.spaceghost.pink/status-json.xsl");
+      const statusData = await statusRes.json();
+      const source = statusData.icestats.source;
 
-setInterval(updateInfo, 10000);
+      // récup titre
+      let title = source.title || "No title";
+      title = decodeUnicodeEntities(title);
+
+      // récup listeners
+      let listeners = source.listeners ?? 0;
+      document.getElementById("current-listeners").innerHTML =
+        `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
+
+      // --- Récup infos nowplaying (url + cover) ---
+      const nowRes = await fetch("https://radio.spaceghost.pink/np/nowplaying.json");
+      const nowData = await nowRes.json();
+
+      const trackUrl = nowData.url || "#";
+      const coverUrl = nowData.cover || "";
+
+      // maj du titre cliquable
+      const titleEl = document.getElementById("current-title");
+      titleEl.innerHTML = `<a href="${trackUrl}" target="_blank">♫ ${title} ♫</a>`;
+
+      // maj de la cover
+      const coverImg = document.getElementById("cover");
+      const coverLink = document.getElementById("cover-link");
+      if (coverUrl) {
+        coverImg.src = coverUrl;
+        coverLink.href = trackUrl;
+        coverLink.style.display = "inline-block";
+      } else {
+        coverLink.style.display = "none";
+      }
+
+    } catch (error) {
+      console.error("Erreur :", error);
+      document.getElementById("current-title").textContent = "Impossible to fetch title";
+      document.getElementById("current-listeners").textContent = "Impossible to fetch listeners";
+    }
+  }
+
+  // premier appel
+  updateInfo();
+
+  // refresh toutes les 10s
+  setInterval(updateInfo, 10000);
 </script>
-
 
 </body>
 </html>
