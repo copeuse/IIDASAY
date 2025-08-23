@@ -92,7 +92,7 @@
       const coverImg = document.getElementById("cover");
       const coverLink = document.getElementById("cover-link");
       if (coverUrl) {
-        coverImg.src = coverUrl;
+        coverImg.src = coverUrl + "?t=" + new Date().getTime();
         coverLink.href = trackUrl;
         coverLink.style.display = "inline-block";
       } else {
