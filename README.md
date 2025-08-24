@@ -1,6 +1,7 @@
 INTERNET IS DYING AND SO ARE YOU
 
-dependence : icecast mpd mpc yt-dlp caddy
+dependence : icecast mpd mpc yt-dlp caddy 
+u also need a static IP
 
 add basic info in icecast during install, hostname = your local IP
 
