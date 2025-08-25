@@ -75,8 +75,13 @@
 
       // récup listeners
       let listeners = source.listeners ?? 0;
+      
       document.getElementById("current-listeners").innerHTML =
-        `${listeners} listener${listeners !== 1 ? "s <a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
+        `${listeners} listener${listeners !== 1 ? "s" : ""} ${
+          listeners >= 2 
+            ? "<a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" 
+            : ""
+        }`;
 
       // --- Récup infos nowplaying (url + cover) ---
       const nowRes = await fetch("https://radio.spaceghost.pink/np/nowplaying.json");
