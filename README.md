@@ -5,17 +5,17 @@
 - add basic info in icecast during install, hostname = your local IP
 - add this mountpoint in /etc/mpd.conf:
 
-	audio_output {
-	    type        "shout"
-	    name        "whatever"		
-	    host        "yourLocalIP"	#same as icecast
-	    port        "8000"		      
-	    mount       "/mystream.mp3" 
-	    password    "hackme"        #same as icecast      
-	    encoder     "lame"                
-	    bitrate     "128"                 
-	    format      "44100:16:2"
-	}
+		audio_output {
+		    type        "shout"
+		    name        "whatever"		
+		    host        "yourLocalIP"	#same as icecast
+		    port        "8000"		      
+		    mount       "/mystream.mp3" 
+		    password    "hackme"        #same as icecast      
+		    encoder     "lame"                
+		    bitrate     "128"                 
+		    format      "44100:16:2"
+		}
 
 set this as your music directiory in /etc/mpd.conf 
 
