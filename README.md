@@ -1,4 +1,4 @@
-INTERNET IS DYING AND SO ARE YOU
+#INTERNET IS DYING AND SO ARE YOU
 
 dependence : icecast mpd mpc yt-dlp caddy + u also need a static IP
 
