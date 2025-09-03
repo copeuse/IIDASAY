@@ -1,9 +1,8 @@
 # INTERNET IS DYING AND SO ARE YOU
 
+
 dependence : icecast mpd mpc yt-dlp caddy + u also need a static IP
-
 add basic info in icecast during install, hostname = your local IP
-
 add this mountpoint in /etc/mpd.conf:
 
 	audio_output {
@@ -24,9 +23,7 @@ set this as your music directiory in /etc/mpd.conf
 
 
 create dir ~/Music/webradio
-
 create dir /var/www/live-info give permission to your current user and caddy
-
 config caddy /etc/caddy/Caddyfile :
 
 	radio.domain.public {
