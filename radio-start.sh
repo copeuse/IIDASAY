@@ -2,12 +2,12 @@
 
 LAST_PLAYLIST=""
 LAST_UPDATE_DATE=""
-LAST_REFRESH_MONTH=""
+LAST_REFRESH_WEEK=""
 
 while true; do
     HOUR=$(date +%H)
-    MONTH=$(date +%m)
-    TODAY=$(date +%Y-%m-%d)  
+    WEEK=$(date +%V)
+    TODAY=$(date +%Y-%m-%d)   # date du jour
     if [ "$HOUR" -ge 8 ] && [ "$HOUR" -lt 12 ]; then
         PLAYLIST="webradio/morning"
     elif [ "$HOUR" -ge 12 ] && [ "$HOUR" -lt 17 ]; then
@@ -21,20 +21,20 @@ while true; do
     else
         PLAYLIST="webradio/sleep"
 
-
+        # exécuter la mise à jour une seule fois par jour
         if [ "$LAST_UPDATE_DATE" != "$TODAY" ]; then
             bash ~/update-playlist.sh &
             LAST_UPDATE_DATE="$TODAY"
         fi
 
-	if [ "$LAST_REFRESH_MONTH" != "$MONTH" ]; then 
-	    LAST_REFRESH_MONTH="$MONTH" 
+	if [ "$LAST_REFRESH_WEEK" != "$WEEK" ]; then 
+	    LAST_REFRESH_WEEK="$WEEK" 
             bash ~/refresh.sh & 
 	fi
 
     fi
 
-
+    # recharge la playlist seulement si elle a changé
     if [ "$PLAYLIST" != "$LAST_PLAYLIST" ]; then
 	mpc update --wait
 	if mpc status | grep -q "\[playing\]"; then
@@ -48,5 +48,5 @@ while true; do
         LAST_PLAYLIST="$PLAYLIST"
     fi
 
-    sleep 300
+    sleep 300   # vérifie toutes les 5 minutes
 done
