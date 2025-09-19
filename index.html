@@ -143,47 +143,61 @@ It's a moment, a moment that I invite you to experience together, before it disa
 </script>
 
 <script>
-  let djMode = false; // garde l'état (normal / DJ)
+ let djMode = false;
 
-  async function updateDjInfo() {
-    const now = new Date();
-    const parisTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }));
-    const hour = parisTime.getHours();
+async function updateDjInfo() {
+  const now = new Date();
+  const parisTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }));
+  const hour = parisTime.getHours();
 
-    const target = document.getElementById("info-block");
-    if (!target) return;
+  const target = document.getElementById("info-block");
+  if (!target) return;
 
-    // Si déjà en mode DJ → on ne touche plus à rien
-    if (djMode) return;
+  // Si on est dans le créneau 23h → 1h
+  if (hour === 23 || hour === 0) {
+    try {
+      const res = await fetch("https://radio.spaceghost.pink/dj/info.json", { cache: "no-store" });
 
-    // Seulement si on est à 23h
-    if (hour === 23 || hour === 0) {
-      try {
-        const res = await fetch("https://radio.spaceghost.pink/dj/info.json", { cache: "no-store" });
-        if (!res.ok) {
-            updateTitle();
-            return; // JSON absent → update titre
-        }
-
+      if (res.ok) {
         const data = await res.json();
 
         if (data && data.pseudo && data.reseaux && data.texte) {
-          // JSON valide → on remplace une seule fois et on reste comme ça
+          // Affichage DJ
           target.innerHTML = `
             <h3><a href="${data.reseaux}" target="_blank">${data.pseudo}</a></h3>
             <p>${data.texte}</p>
           `;
-          djMode = true; // verrouillage
+          djMode = true;
+          return;
         }
-      } catch (err) {
-        console.warn("Erreur JSON DJ info :", err);
+      }
+
+      // Ici : JSON absent ou invalide → revenir au mode normal
+      if (djMode) {
+        await updateTitle();
+        djMode = false;
+      }
+
+    } catch (err) {
+      console.warn("Erreur JSON DJ info :", err);
+      if (djMode) {
+        await updateTitle();
+        djMode = false;
       }
     }
+  } else {
+    // Hors créneau → on revient au mode normal
+    if (djMode) {
+      await updateTitle();
+      djMode = false;
+    }
   }
+}
 
-  // vérifie toutes les 30s si on doit passer en mode DJ
-  updateDjInfo();
-  setInterval(updateDjInfo, 30000);
+// vérifie toutes les 30s si on doit passer en mode DJ
+updateDjInfo();
+setInterval(updateDjInfo, 30000);
+
 </script>
 
 
