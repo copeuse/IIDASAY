@@ -35,13 +35,12 @@
     HTML5 audio not supported by your browser.
   </audio>
   
-  <!-- Titre -->
-  <p id="current-title">Loading...</p>
-
-  <!-- Cover -->
-  <a id="cover-link" href="#" target="_blank" style="display:none;">
-    <img id="cover" src="" alt="Current cover">
-  </a>
+  <div id="info-block">
+    <p id="current-title">Loading...</p>
+    <a id="cover-link" href="#" target="_blank" style="display:none;">
+      <img id="cover" src="" alt="Current cover">
+    </a>
+  </div>
   
   <p id="current-listeners">Loading listeners...</p>
 
@@ -137,9 +136,7 @@ It's a moment, a moment that I invite you to experience together, before it disa
     const parisTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }));
     const hour = parisTime.getHours();
 
-    const target = document.querySelector("h4"); // ton <h4> existant
-    const defaultText = "track selection changes based on the hour, paris time. new tracks are added every day";
-
+    const target = document.getElementById("info-block");
     if (!target) return;
 
     if (hour === 23) {
@@ -150,9 +147,11 @@ It's a moment, a moment that I invite you to experience together, before it disa
         const data = await res.json();
 
         if (data && data.pseudo && data.reseaux && data.texte) {
-          // JSON valide → on affiche la sélection
-          target.innerHTML = `<h4>tonight's selection by <a href="${data.reseaux}" target="_blank">${data.pseudo}</a></h4>
-                              <p>${data.texte}</p>`;
+          // JSON valide → on remplace tout le bloc
+          target.innerHTML = `
+            <h3><a href="${data.reseaux}" target="_blank">${data.pseudo}</a></h3>
+            <p>${data.texte}</p>
+          `;
           return;
         }
       } catch (err) {
@@ -160,14 +159,20 @@ It's a moment, a moment that I invite you to experience together, before it disa
       }
     }
 
-    // Cas par défaut (hors 23h OU JSON manquant/invalide)
-    target.textContent = defaultText;
+    // Cas par défaut (hors 23h OU JSON manquant/invalide) → on remet Titre + Cover
+    target.innerHTML = `
+      <p id="current-title">Loading...</p>
+      <a id="cover-link" href="#" target="_blank" style="display:none;">
+        <img id="cover" src="" alt="Current cover">
+      </a>
+    `;
   }
 
   // appel direct puis toutes les 10s
   updateDjInfo();
   setInterval(updateDjInfo, 10000);
 </script>
+
 
 
 </body>
