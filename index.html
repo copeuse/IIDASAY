@@ -35,12 +35,19 @@
     HTML5 audio not supported by your browser.
   </audio>
   
-  <div id="info-block">
+<div id="info-block">
+  <div id="normal-mode">
     <p id="current-title">Loading...</p>
     <a id="cover-link" href="#" target="_blank" style="display:none;">
       <img id="cover" src="" alt="Current cover">
     </a>
   </div>
+  <div id="dj-mode" style="display:none;">
+    <h3><a id="dj-link" href="#" target="_blank"></a></h3>
+    <p id="dj-text"></p>
+  </div>
+</div>
+
   
   <p id="current-listeners">Loading listeners...</p>
 
@@ -69,134 +76,108 @@ It's a moment, a moment that I invite you to experience together, before it disa
  　＼二つ</p>
 
 <script>
-  // Fonction pour convertir les entités Unicode en caractères
-  function decodeUnicodeEntities(str) {
-    return str.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
-  }
+async function updateRadioInfo() {
+  const normalBlock = document.getElementById("normal-mode");
+  const djBlock = document.getElementById("dj-mode");
 
-  async function updateInfo() {
-    try {
-      // --- Récup infos titre et listeners ---
-      const statusRes = await fetch("https://radio.spaceghost.pink/status-json.xsl");
-      const statusData = await statusRes.json();
-      const source = statusData.icestats.source;
-
-      // récup listeners
-      let listeners = source.listeners ?? 0;
-      document.getElementById("current-listeners").innerHTML =
-        `${listeners} listener${listeners <= 1 ? "" : "s"} ${listeners >= 2 ? "<a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
-
-    } catch (error) {
-      console.error("Erreur :", error);
-      document.getElementById("current-title").textContent = "Impossible to fetch title";
-    }
-  }
-
-  async function updateTitle() {
-    try {
-      // --- Récup infos nowplaying (url + cover) ---
-      const nowRes = await fetch("https://radio.spaceghost.pink/np/nowplaying.json");
-      const nowData = await nowRes.json();
-
-      const statusRes = await fetch("https://radio.spaceghost.pink/status-json.xsl");
-      const statusData = await statusRes.json();
-      const source = statusData.icestats.source;
-
-
-      const trackUrl = nowData.url || "#";
-      const coverUrl = nowData.cover || "";
-
-      // récup titre
-      let title = source.title || "No title";
-      title = decodeUnicodeEntities(title);
-
-      // maj du titre cliquable
-      const titleEl = document.getElementById("current-title");
-      titleEl.innerHTML = `<a href="${trackUrl}" target="_blank">♫ ${title} ♫</a>`;
-
-      document.title = `♫ ${title} ♫ - INTERNET IS DYING AND SO ARE YOU`;
-
-      // maj de la cover
-      const coverImg = document.getElementById("cover");
-      const coverLink = document.getElementById("cover-link");
-      if (coverUrl) {
-        coverImg.src = coverUrl + "?t=" + new Date().getTime();
-        coverLink.href = trackUrl;
-        coverLink.style.display = "inline-block";
-      } else {
-        coverLink.style.display = "none";
-      }
-
-    } catch (error) {
-      console.error("Erreur :", error);
-      document.getElementById("current-title").textContent = "Impossible to fetch title";
-    }
-  }
-
-  // update listeners
-  updateInfo();
-  // update title
-  updateTitle();
-
-  // refresh toutes les 10s
-  setInterval(updateInfo, 10000);
-</script>
-
-<script>
- let djMode = false;
-
-async function updateDjInfo() {
   const now = new Date();
   const parisTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }));
   const hour = parisTime.getHours();
 
-  const target = document.getElementById("info-block");
-  if (!target) return;
+  const isDjHour = (hour === 23 || hour === 0);
 
-  // Si on est dans le créneau 23h → 1h
-  if (hour === 23 || hour === 0) {
+  // --- bloc DJ ---
+  if (isDjHour) {
     try {
       const res = await fetch("https://radio.spaceghost.pink/dj/info.json", { cache: "no-store" });
 
       if (res.ok) {
         const data = await res.json();
-
         if (data && data.pseudo && data.reseaux && data.texte) {
-          // Affichage DJ
-          target.innerHTML = `
-            <h3><a href="${data.reseaux}" target="_blank">${data.pseudo}</a></h3>
-            <p>${data.texte}</p>
-          `;
-          djMode = true;
+          document.getElementById("dj-link").href = data.reseaux;
+          document.getElementById("dj-link").textContent = data.pseudo;
+          document.getElementById("dj-text").textContent = data.texte;
+
+          normalBlock.style.display = "none";
+          djBlock.style.display = "block";
+
+          // --- listeners ---
+          await updateListeners();
+
           return;
         }
       }
-
-      // Ici : JSON absent ou invalide → revenir au mode normal
-      if (djMode) {
-        await updateTitle();
-        djMode = false;
-      }
-
     } catch (err) {
       console.warn("Erreur JSON DJ info :", err);
-      if (djMode) {
-        await updateTitle();
-        djMode = false;
-      }
     }
-  } else {
-    // Hors créneau → on revient au mode normal
-    if (djMode) {
-      await updateTitle();
-      djMode = false;
+  }
+
+  // --- mode normal ---
+  try {
+    const nowRes = await fetch("https://radio.spaceghost.pink/np/nowplaying.json");
+    const nowData = await nowRes.json();
+
+    const statusRes = await fetch("https://radio.spaceghost.pink/status-json.xsl");
+    const statusData = await statusRes.json();
+    const source = statusData.icestats.source;
+
+    const trackUrl = nowData.url || "#";
+    const coverUrl = nowData.cover || "";
+
+    // titre
+    let title = source.title || "No title";
+    title = title.replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(code));
+
+    const titleEl = document.getElementById("current-title");
+    titleEl.innerHTML = `<a href="${trackUrl}" target="_blank">♫ ${title} ♫</a>`;
+    document.title = `♫ ${title} ♫ - INTERNET IS DYING AND SO ARE YOU`;
+
+    // cover
+    const coverImg = document.getElementById("cover");
+    const coverLink = document.getElementById("cover-link");
+    if (coverUrl) {
+      coverImg.src = coverUrl + "?t=" + new Date().getTime();
+      coverLink.href = trackUrl;
+      coverLink.style.display = "inline-block";
+    } else {
+      coverLink.style.display = "none";
     }
+
+    normalBlock.style.display = "block";
+    djBlock.style.display = "none";
+
+    // --- listeners ---
+    await updateListeners();
+
+  } catch (error) {
+    console.error("Erreur :", error);
+    const titleEl = document.getElementById("current-title");
+    if (titleEl) titleEl.textContent = "Impossible to fetch title";
   }
 }
 
-// vérifie toutes les 30s si on doit passer en mode DJ
-updateDjInfo();
-setInterval(updateDjInfo, 30000);
+// --- fonction séparée pour listeners ---
+async function updateListeners() {
+  try {
+    const statusRes = await fetch("https://radio.spaceghost.pink/status-json.xsl");
+    const statusData = await statusRes.json();
+    const source = statusData.icestats.source;
+
+    let listeners = source.listeners ?? 0;
+    document.getElementById("current-listeners").innerHTML =
+      `${listeners} listener${listeners === 1 ? "" : "s"} ${listeners >= 2 ? "<a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
+  } catch (err) {
+    console.warn("Impossible de récupérer les listeners :", err);
+    const el = document.getElementById("current-listeners");
+    if (el) el.textContent = "Loading listeners...";
+  }
+}
+
+// premier lancement
+updateRadioInfo();
+
+// toutes les 10s
+setInterval(updateRadioInfo, 10000);
 
 </script>
 
