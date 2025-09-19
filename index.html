@@ -137,26 +137,38 @@ It's a moment, a moment that I invite you to experience together, before it disa
     const parisTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }));
     const hour = parisTime.getHours();
 
+    const target = document.querySelector("h4"); // ton <h4> existant
+    const defaultText = "track selection changes based on the hour, paris time. new tracks are added every day";
+
+    if (!target) return;
+
     if (hour === 23) {
       try {
-        const res = await fetch("https://radio.spaceghost.pink/dj/info.json");
+        const res = await fetch("https://radio.spaceghost.pink/dj/info.json", { cache: "no-store" });
+        if (!res.ok) throw new Error("JSON introuvable");
+
         const data = await res.json();
 
-        const target = document.querySelector("h4"); // ton <h4> existant
-        if (target) {
+        if (data && data.pseudo && data.reseaux && data.texte) {
+          // JSON valide → on affiche la sélection
           target.innerHTML = `<h4>tonight's selection by <a href="${data.reseaux}" target="_blank">${data.pseudo}</a></h4>
                               <p>${data.texte}</p>`;
+          return;
         }
       } catch (err) {
-        console.error("Erreur JSON DJ info :", err);
+        console.warn("Erreur JSON DJ info :", err);
       }
     }
+
+    // Cas par défaut (hors 23h OU JSON manquant/invalide)
+    target.textContent = defaultText;
   }
 
-  // appel direct puis toutes les minutes (au cas où l’utilisateur reste sur la page)
+  // appel direct puis toutes les 10s
   updateDjInfo();
   setInterval(updateDjInfo, 10000);
 </script>
+
 
 </body>
 </html>
