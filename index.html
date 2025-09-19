@@ -90,7 +90,14 @@ It's a moment, a moment that I invite you to experience together, before it disa
       document.getElementById("current-listeners").innerHTML =
         `${listeners} listener${listeners <= 1 ? "" : "s"} ${listeners >= 2 ? "<a href='https://web.libera.chat/?channels=#idasay' target='_blank'>Maybe you’d like to chat all together?</a>" : ""}`;
 
+    } catch (error) {
+      console.error("Erreur :", error);
+      document.getElementById("current-title").textContent = "Impossible to fetch title";
+    }
+  }
 
+  async function updateTitle() {
+    try {
       // --- Récup infos nowplaying (url + cover) ---
       const nowRes = await fetch("https://radio.spaceghost.pink/np/nowplaying.json");
       const nowData = await nowRes.json();
@@ -118,12 +125,13 @@ It's a moment, a moment that I invite you to experience together, before it disa
     } catch (error) {
       console.error("Erreur :", error);
       document.getElementById("current-title").textContent = "Impossible to fetch title";
-      document.getElementById("current-listeners").textContent = "Impossible to fetch listeners";
     }
   }
 
-  // premier appel
+  // update listeners
   updateInfo();
+  // update title
+  updateTitle();
 
   // refresh toutes les 10s
   setInterval(updateInfo, 10000);
@@ -147,7 +155,10 @@ It's a moment, a moment that I invite you to experience together, before it disa
     if (hour === 23 || hour === 0) {
       try {
         const res = await fetch("https://radio.spaceghost.pink/dj/info.json", { cache: "no-store" });
-        if (!res.ok) return; // JSON absent → ne rien faire
+        if (!res.ok) {
+            updateTitle();
+            return; // JSON absent → update titre
+        }
 
         const data = await res.json();
 
