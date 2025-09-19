@@ -130,5 +130,33 @@ It's a moment, a moment that I invite you to experience together, before it disa
   setInterval(updateInfo, 10000);
 </script>
 
+<script>
+  async function updateDjInfo() {
+    const now = new Date();
+    // Heure Paris
+    const parisTime = new Date(now.toLocaleString("en-US", { timeZone: "Europe/Paris" }));
+    const hour = parisTime.getHours();
+
+    if (hour === 23) {
+      try {
+        const res = await fetch("https://radio.spaceghost.pink/dj/info.json");
+        const data = await res.json();
+
+        const target = document.querySelector("h4"); // ton <h4> existant
+        if (target) {
+          target.innerHTML = `<h4><a href="${data.reseaux}" target="_blank">${data.pseudo}</a></h4>
+                              <p>${data.texte}</p>`;
+        }
+      } catch (err) {
+        console.error("Erreur JSON DJ info :", err);
+      }
+    }
+  }
+
+  // appel direct puis toutes les minutes (au cas où l’utilisateur reste sur la page)
+  updateDjInfo();
+  setInterval(updateDjInfo, 10000);
+</script>
+
 </body>
 </html>
