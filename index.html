@@ -98,6 +98,11 @@ It's a moment, a moment that I invite you to experience together, before it disa
       const nowRes = await fetch("https://radio.spaceghost.pink/np/nowplaying.json");
       const nowData = await nowRes.json();
 
+      const statusRes = await fetch("https://radio.spaceghost.pink/status-json.xsl");
+      const statusData = await statusRes.json();
+      const source = statusData.icestats.source;
+
+
       const trackUrl = nowData.url || "#";
       const coverUrl = nowData.cover || "";
 
