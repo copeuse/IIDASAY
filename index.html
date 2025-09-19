@@ -81,10 +81,6 @@ It's a moment, a moment that I invite you to experience together, before it disa
       const statusData = await statusRes.json();
       const source = statusData.icestats.source;
 
-      // récup titre
-      let title = source.title || "No title";
-      title = decodeUnicodeEntities(title);
-
       // récup listeners
       let listeners = source.listeners ?? 0;
       document.getElementById("current-listeners").innerHTML =
@@ -104,6 +100,10 @@ It's a moment, a moment that I invite you to experience together, before it disa
 
       const trackUrl = nowData.url || "#";
       const coverUrl = nowData.cover || "";
+
+      // récup titre
+      let title = source.title || "No title";
+      title = decodeUnicodeEntities(title);
 
       // maj du titre cliquable
       const titleEl = document.getElementById("current-title");
