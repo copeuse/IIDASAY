@@ -7,6 +7,7 @@ LAST_FILE="$HOME/last.txt"
 INFO_PATH="/var/www/live-info/dj"
 rm -r "$DJ_DIR"
 mkdir -p "$DJ_DIR"
+mkdir -p "$INFO_PATH"
 
 # Lis le dernier DJ joué, si aucun => 0
 if [[ -f "$LAST_FILE" ]]; then
