@@ -58,5 +58,3 @@ EOF
 echo "$NEXT_DJ" > "$LAST_FILE"
 
 echo "DJ [$NEXT_DJ] prêt et playlist téléchargée."
-
-~/bluesky-bot/.venv/bin/python ~/bluesky-bot/bluesky-bot.py
