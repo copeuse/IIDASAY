@@ -7,7 +7,6 @@ LAST_FILE="$HOME/last.txt"
 INFO_PATH="/var/www/live-info/dj"
 rm -r "$DJ_DIR"
 mkdir -p "$DJ_DIR"
-mkdir -p "$INFO_PATH"
 
 # Lis le dernier DJ joué, si aucun => 0
 if [[ -f "$LAST_FILE" ]]; then
@@ -42,7 +41,7 @@ TEXTE=$(echo "$SECTION" | grep '^texte=' | cut -d'=' -f2-)
 
 # Télécharge en mp3 dans le dossier du DJ
 if [[ -n "$PLAYLIST" ]]; then
-    yt-dlp --force-ipv4 --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 160K --embed-thumbnail --embed-metadata -o "$DJ_DIR/%(title)s.%(ext)s" "$PLAYLIST"
+    yt-dlp --force-ipv4 --ignore-errors --format bestaudio --extract-audio --audio-format mp3 --audio-quality 160K --embed-thumbnail --embed-metadata -o "$DJ_DIR/%(autonumber)s-%(title)s.%(ext)s" "$PLAYLIST"
 fi
 
 # Crée un fichier JSON avec les infos
@@ -59,3 +58,5 @@ EOF
 echo "$NEXT_DJ" > "$LAST_FILE"
 
 echo "DJ [$NEXT_DJ] prêt et playlist téléchargée."
+
+~/bluesky-bot/.venv/bin/python ~/bluesky-bot/bluesky-bot.py
