@@ -14,7 +14,9 @@ YTDLP="yt-dlp --force-ipv4 --ignore-errors --format bestaudio \
 --download-archive $HOME/Archive-refresh"
 
 curl -sL "$(cat ~/colab.txt)" -o playlist.txt
-rm "$HOME/Archive-refresh"
+if [ -d "$HOME/Archive-refresh" ]; then
+    rm "$HOME/Archive-refresh"
+fi
 mkdir -p  "$BASE_DIR"
 
 # Parsing du fichier playlists.txt
@@ -40,9 +42,15 @@ while IFS= read -r line; do
 done < "$PLAYLIST_FILE"
 
 mpc clear
-rm -r "$HOME/Music/archive"
-rm -r "$HOME/Archive"
+if [ -d "$HOME/Music/archive" ]; then
+    rm -r "$HOME/Music/archive"
+fi
+if [ -d "$HOME/Archive" ]; then
+    rm -r "$HOME/Archive"
+fi
+if [ -d "$HOME/Music/webradio" ]; then
 mv "$HOME/Music/webradio" "$HOME/Music/archive"
+fi
 mv "$BASE_DIR" "$HOME/Music/webradio"
 mv "$HOME/Archive-refresh" "$HOME/Archive"
 mpc update --wait
