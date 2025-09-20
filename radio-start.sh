@@ -7,46 +7,75 @@ LAST_REFRESH_WEEK=""
 while true; do
     HOUR=$(date +%H)
     WEEK=$(date +%V)
-    TODAY=$(date +%Y-%m-%d)   # date du jour
+    TODAY=$(date +%Y-%m-%d)
+
+    DJ_JSON="/var/www/live-info/dj/info.json"
+
     if [ "$HOUR" -ge 8 ] && [ "$HOUR" -lt 12 ]; then
         PLAYLIST="webradio/morning"
     elif [ "$HOUR" -ge 12 ] && [ "$HOUR" -lt 17 ]; then
         PLAYLIST="webradio/afternoon"
     elif [ "$HOUR" -ge 17 ] && [ "$HOUR" -lt 21 ]; then
         PLAYLIST="webradio/evening"
-    elif [ "$HOUR" -ge 21 ] && [ "$HOUR" -lt 24 ]; then
+    elif [ "$HOUR" -ge 21 ] && [ "$HOUR" -lt 23 ]; then
         PLAYLIST="webradio/night"
-    elif [ "$HOUR" -ge 0 ] && [ "$HOUR" -lt 4 ]; then
-        PLAYLIST="webradio/after"
+    elif [ "$HOUR" -ge 23 ] || [ "$HOUR" -lt 1 ]; then
+        if [ -s "$DJ_JSON" ]; then
+            PLAYLIST="webradio/DJ"
+        else
+            PLAYLIST="webradio/after"
+        fi
+    elif [ "$HOUR" -ge 1 ] && [ "$HOUR" -lt 4 ]; then
+	rm -f /var/www/live-info/dj/info.json
+	PLAYLIST="webradio/after"
     else
         PLAYLIST="webradio/sleep"
-
-        # exécuter la mise à jour une seule fois par jour
-        if [ "$LAST_UPDATE_DATE" != "$TODAY" ]; then
-            bash ~/update-playlist.sh &
-            LAST_UPDATE_DATE="$TODAY"
-        fi
-
-	if [ "$LAST_REFRESH_WEEK" != "$WEEK" ]; then 
-	    LAST_REFRESH_WEEK="$WEEK" 
-            bash ~/refresh.sh & 
-	fi
-
     fi
 
-    # recharge la playlist seulement si elle a changé
+if [[ "$PLAYLIST" == "webradio/DJ" ]]; then
+    if mpc current -f %file% | grep -q "/after/"; then
+	    rm -f /var/www/live-info/dj/info.json
+    	    PLAYLIST="webradio/after"
+    fi
+fi
+
     if [ "$PLAYLIST" != "$LAST_PLAYLIST" ]; then
-	mpc update --wait
-	if mpc status | grep -q "\[playing\]"; then
+        mpc update --wait
+        if mpc status | grep -q "\[playing\]"; then
             mpc crop
         else
             mpc clear
         fi
+
         mpc add "$PLAYLIST"
-        mpc random on
+
+        if [[ "$PLAYLIST" == "webradio/sleep" ]]; then
+	    if [ "$LAST_UPDATE_DATE" != "$TODAY" ]; then
+                if [ "$LAST_REFRESH_WEEK" != "$WEEK" ]; then
+                    LAST_REFRESH_WEEK="$WEEK"
+                    bash ~/refresh.sh &
+                else
+                    bash ~/update-playlist.sh &
+                fi
+               LAST_UPDATE_DATE="$TODAY"
+            fi
+       fi
+
+	if [[ "$PLAYLIST" == "webradio/evening" ]]; then
+	       bash ~/update-dj.sh &
+	fi
+        if [[ "$PLAYLIST" == "webradio/DJ" ]]; then
+            mpc random off
+	    mpc add $(find ~/Music/webradio/after -type f -name '*.mp3' | shuf)
+        else
+            mpc random on
+        fi
+
         mpc play
         LAST_PLAYLIST="$PLAYLIST"
     fi
 
-    sleep 300   # vérifie toutes les 5 minutes
+
+    sleep 10
 done
+
