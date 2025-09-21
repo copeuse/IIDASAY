@@ -32,13 +32,6 @@ while true; do
         PLAYLIST="webradio/sleep"
     fi
 
-if [[ "$PLAYLIST" == "webradio/DJ" ]]; then
-    if mpc current -f %file% | grep -q "/after/"; then
-	    rm -f /var/www/live-info/dj/info.json
-    	    PLAYLIST="webradio/after"
-    fi
-fi
-
     if [ "$PLAYLIST" != "$LAST_PLAYLIST" ]; then
         mpc update --wait
         if mpc status | grep -q "\[playing\]"; then
@@ -75,6 +68,11 @@ fi
         LAST_PLAYLIST="$PLAYLIST"
     fi
 
+    if [[ "$PLAYLIST" == "webradio/DJ" ]]; then
+        if mpc current -f %file% | grep -q "/after/"; then
+                rm -f /var/www/live-info/dj/info.json
+        fi
+    fi
 
     sleep 10
 done
