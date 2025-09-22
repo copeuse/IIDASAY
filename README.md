@@ -47,6 +47,16 @@
 		             Cache-Control: no-cache, no-store, must-revalidate
 		          }
 			}
+	        handle_path /dj/* {
+  			  root * /var/www/live-info/dj
+	          file_server
+		          header {
+		             Access-Control-Allow-Origin *
+		             Access-Control-Allow-Methods "GET, OPTIONS"
+		             Access-Control-Allow-Headers "Content-Type"
+		             Cache-Control: no-cache, no-store, must-revalidate
+		          }
+	        }
 			handle {
 			 reverse_proxy yourLocalIP:8000
 			}
@@ -89,6 +99,28 @@ here is an exemple of a colaborative txt:
 		https://soundcloud.com/n2v2/sets/6
 		https://soundcloud.com/louisaeae/sets/6
 		https://youtube.com/playlist?list=dijenfOFNIGeijgn
+
+- create another colaborative txt, and put the raw link into a file called ~/colab2.txt
+  
+here is an exemple of the second colaborative txt: 
+
+		[0]
+		pseudo=
+		reseaux=
+		playlist=
+		texte=
+		
+		[1]
+		pseudo=névé
+		reseaux=https://spaceghost.pink
+		playlist=https://soundcloud.com/user-255544422233/t4t
+		texte=voici un exemple de comment vous pouvez rediger votre bloc. evitez les charactères spéciaux notamment les guillement, ainsi que les sauts de ligne. 
+		
+		[2]
+		pseudo=névé
+		reseaux=https://soundcloud.com/labtoxin
+		playlist=https://soundcloud.com/hypercore-collective/hypercore-url-labtoxin
+		texte=petit set de labtoxin pour tester l'update, j'espere que ca marche pcq c vraiment trop cool. ce texte est sencé etre posté dans un blux.
 
 - configure type A DNS like radio.domain.public answer your public IP
 
