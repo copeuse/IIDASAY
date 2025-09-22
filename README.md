@@ -117,10 +117,10 @@ here is an exemple of the second colaborative txt:
 		texte=voici un exemple de comment vous pouvez rediger votre bloc. evitez les charactères spéciaux notamment les guillement, ainsi que les sauts de ligne. 
 		
 		[2]
-		pseudo=névé
+		pseudo=labtoxin
 		reseaux=https://soundcloud.com/labtoxin
 		playlist=https://soundcloud.com/hypercore-collective/hypercore-url-labtoxin
-		texte=petit set de labtoxin pour tester l'update, j'espere que ca marche pcq c vraiment trop cool. ce texte est sencé etre posté dans un blux.
+		texte=set pour tester l'update, j'espere que ca marche pcq c vraiment trop cool. ce texte est sencé etre posté dans un blux.
 
 - configure type A DNS like radio.domain.public answer your public IP
 
