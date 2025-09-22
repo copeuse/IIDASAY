@@ -3,7 +3,6 @@
 LAST_PLAYLIST=""
 LAST_UPDATE_DATE=""
 LAST_REFRESH_WEEK=""
-AFTER_DIR="$HOME/Music/webradio/after"
 
 while true; do
     HOUR=$(date +%H)
@@ -60,7 +59,7 @@ while true; do
 	fi
         if [[ "$PLAYLIST" == "webradio/DJ" ]]; then
             mpc random off
-	    find "$AFTER_DIR" -type f -name '*.mp3' -print0 | shuf -z | xargs -0 mpc add
+	    find /home/alice/Music/webradio/after -type f -name '*.mp3' -print0 | shuf -z | xargs -0 mpc add
         else
             mpc random on
         fi
