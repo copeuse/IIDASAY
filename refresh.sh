@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# Fichier contenant les playlists
 PLAYLIST_FILE="playlist.txt"
 
+# Répertoire de base pour la musique
 BASE_DIR="$HOME/Music/refresh"
 
+# Commande yt-dlp de base
 YTDLP="yt-dlp --force-ipv4 --ignore-errors --format bestaudio \
 --extract-audio --audio-format mp3 --audio-quality 160K \
 --embed-thumbnail --embed-metadata \
@@ -11,39 +14,49 @@ YTDLP="yt-dlp --force-ipv4 --ignore-errors --format bestaudio \
 --download-archive $HOME/Archive-refresh"
 
 curl -sL "$(cat ~/colab.txt)" -o playlist.txt
-rm -r ~/Music/refresh
-rm ~/Archive-refresh
-mkdir ~/Music/refresh
+if [ -d "$HOME/Archive-refresh" ]; then
+    rm "$HOME/Archive-refresh"
+fi
+mkdir -p  "$BASE_DIR"
 
+# Parsing du fichier playlists.txt
 current_section=""
 while IFS= read -r line; do
-    
+    # Ignorer les lignes vides ou commentaires
     [[ -z "$line" || "$line" =~ ^# ]] && continue
 
+    # Détection des sections
     if [[ "$line" =~ ^\[(.*)\]$ ]]; then
         current_section="${BASH_REMATCH[1]}"
         continue
     fi
 
+    # Si on est dans une section, télécharger le lien
     if [[ -n "$current_section" ]]; then
         folder="$BASE_DIR/$current_section"
         mkdir -p "$folder"
 
-        echo ">>> Download in $folder : $line"
+        echo ">>> Téléchargement dans $folder : $line"
         $YTDLP --paths "$folder" --output "%(title)s -- %(uploader)s.%(ext)s" "$line"
     fi
 done < "$PLAYLIST_FILE"
 
 mpc clear
-rm -r ~/Music/archive
-rm -r ~/Archive
-mv ~/Music/webradio ~/Music/archive
-mv ~/Music/refresh ~/Music/webradio
-mv ~/Archive-refresh ~/Archive
+if [ -d "$HOME/Music/archive" ]; then
+    rm -r "$HOME/Music/archive"
+fi
+if [ -d "$HOME/Archive" ]; then
+    rm -r "$HOME/Archive"
+fi
+if [ -d "$HOME/Music/webradio" ]; then
+mv "$HOME/Music/webradio" "$HOME/Music/archive"
+fi
+mv "$BASE_DIR" "$HOME/Music/webradio"
+mv "$HOME/Archive-refresh" "$HOME/Archive"
 mpc update --wait
 
     HOUR=$(date +%H)
-    TODAY=$(date +%Y-%m-%d)
+    TODAY=$(date +%Y-%m-%d)   # date du jour
     if [ "$HOUR" -ge 8 ] && [ "$HOUR" -lt 12 ]; then
         PLAYLIST="webradio/morning"
     elif [ "$HOUR" -ge 12 ] && [ "$HOUR" -lt 17 ]; then
