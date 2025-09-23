@@ -101,3 +101,10 @@ my index.html works for https://radio.spaceghost.pink but i guess u can just cop
 
 force refresh : nohup ~/refresh.sh > ~/refresh.log 2>&1 & disown
 
+you need venv for the bluesky bot, install it and create a virtual environment like 
+
+	cd ~/bluesky-bot
+	python3 -m venv .venv
+
+you also need a systemd service for np-bot $HOME/bluesky-bot/.venv/bin/python $HOME/bluesky-bot/np-bot.py
+
