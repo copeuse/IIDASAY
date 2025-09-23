@@ -1,9 +1,5 @@
 # INTERNET IS DYING AND SO ARE YOU
 
-88*31 button made by rrrroseazerty : 
-
-	<a href="https://internet-is-dying-and-so-are-you" target="_blank"><img src=https://raw.githubusercontent.com/copeuse/IIDASAY/refs/heads/main/idasay.gif></a>
-
 - dependence : icecast mpd mpc yt-dlp caddy + u also need a static IP
 - add basic info in icecast during install, hostname = your local IP
 - add this mountpoint in /etc/mpd.conf:
