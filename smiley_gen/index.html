@@ -1,0 +1,86 @@
+<!-- by snflrwfld.neocities.org -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Smiley Maker Tool</title>
+
+<style>
+
+
+#wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+#smileyDiv {
+  font-size: 30px;
+  min-height: 30px;
+}
+
+#controlButtons {
+  margin-top: 25px;
+  margin-bottom: 10px;
+}
+
+#charButtonsDiv {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-gap: 2px;
+}
+
+#seedDiv {
+  font-size: 0.75em;
+}
+
+
+button.charButtonClass {
+  text-align: center;
+  border: 1px solid black;
+  background-color: #f5d3e0;
+}
+
+button.charButtonClass:hover {
+  background-color: #ccadb9;
+}
+</style>
+  </head>
+
+  <body onLoad="onLoad()">
+    <!--<h2>Smiley Maker Tool</h2> -->
+
+
+
+    <div id="wrapper">
+      <div id="charButtonsDiv"></div>
+
+      <div id="controlsDiv">
+        <div id="controlButtons">
+          <button id="addSpaceButton">ADD SPACE</button></br>
+          <button id="clearButton">CLEAR</button></br>
+          <button id="copyButton">COPY TO CLIPBOARD</button>
+        </div>
+
+        <div id="seedButtons">
+          <button id="rerollButton">RE-ROLL CHARACTERS</button></br>
+          <input id="seedInput"></input>
+          <button id="useSeedButton">USE SEED</button>
+        </div>
+
+        <div id="seedDiv">
+          SEED : </br><span id="seedValueSpan"></span>
+        </div>
+
+      </div>
+
+    </div>
+    <h4>RESULT:</h4>
+    <span id="smileyDiv"></span>
+
+  </body>
+
+  <script src="main.js"></script>
+  <script src="genewords.js"></script>
+</html>

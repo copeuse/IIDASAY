@@ -32,6 +32,13 @@
       border: 1px solid #ddd;
       border-radius: 8px;
     }
+    #smiley-iframe {
+      width:100%;
+      max-width: 900px;
+      height: 350px;
+      overflow: auto;
+      border-radius: 8px;
+    }
     @media (max-width: 768px) {
       #chat-iframe {
         height: 500px;
@@ -72,6 +79,8 @@
   <p style="margin-top: 75px;" id="current-listeners">Loading listeners...</p>
 
   <iframe id="chat-iframe" src="https://web.libera.chat/?channels=#idasay" title="irc - #idasay" allowfullscreen></iframe>
+  
+  <iframe id="smiley-iframe" src="smiley_gen/index.html" title="smiley_gen" allow="clipboard-write *" allowfullscreen></iframe>
 
   <p style="text-align: left; white-space: pre; margin-top: 125px;">This page is under construction, <a href="https://github.com/copeuse/IIDASAY" target="_blank">any help is welcome!</a></p> 
   <p style="text-align: start; font-size: x-small; margin-left: 525px; margin-top: 225px;"> I grew up with the feeling that the internet was immortal, yet <a href="https://en.wikipedia.org/wiki/Link_rot" target="_blank">the web is dying, and has been since its birth</a>.
