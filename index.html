@@ -23,6 +23,27 @@
       display: block;
       border-radius: 10px;
     }
+    #chat-iframe {
+      width: 100%;
+      max-width: 900px;
+      height: 600px;
+      margin: 30px auto;
+      display: block;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    @media (max-width: 768px) {
+      #chat-iframe {
+        height: 500px;
+        margin: 20px auto;
+      }
+    }
+    @media (max-width: 480px) {
+      #chat-iframe {
+        height: 400px;
+        margin: 15px auto;
+      }
+    }
   </style>
 </head>
 <body>
@@ -48,6 +69,7 @@
   </div>
 </div>
 
+  <iframe id="chat-iframe" src="https://web.libera.chat/?channels=#idasay" title="irc - #idasay" allowfullscreen></iframe>
   
   <p id="current-listeners">Loading listeners...</p>
 
