@@ -199,6 +199,15 @@ async function updateListeners() {
     let listeners = source.listeners ?? 0;
     document.getElementById("current-listeners").innerHTML =
       `${listeners} listener${listeners === 1 ? "" : "s"} ${listeners >= 2 ? "...maybe you’d like to chat all together? ↴" : ""}`;
+
+      if (listeners >= 2) {
+      chatIframe.style.display = "block";
+      smileyIframe.style.display = "block";
+    } else {
+      chatIframe.style.display = "none";
+      smileyIframe.style.display = "none";
+    }
+    
   } catch (err) {
     console.warn("Impossible de récupérer les listeners :", err);
     const el = document.getElementById("current-listeners");
