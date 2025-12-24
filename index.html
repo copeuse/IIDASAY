@@ -196,24 +196,32 @@ async function updateListeners() {
     const statusData = await statusRes.json();
     const source = statusData.icestats.source;
 
-    let listeners = source.listeners ?? 0;
-    document.getElementById("current-listeners").innerHTML =
-      `${listeners} listener${listeners === 1 ? "" : "s"} ${listeners >= 2 ? "...maybe you’d like to chat all together? ↴" : ""}`;
+    const listeners = source.listeners ?? 0;
 
-      if (listeners >= 2) {
+    const listenersEl = document.getElementById("current-listeners");
+    const chatIframe = document.getElementById("chat-iframe");
+    const smileyIframe = document.getElementById("smiley-iframe");
+
+    listenersEl.innerHTML =
+      `${listeners} listener${listeners === 1 ? "" : "s"} ${
+        listeners >= 2 ? "...maybe you’d like to chat all together? ↴" : ""
+      }`;
+
+    if (listeners >= 2) {
       chatIframe.style.display = "block";
       smileyIframe.style.display = "block";
     } else {
       chatIframe.style.display = "none";
       smileyIframe.style.display = "none";
     }
-    
+
   } catch (err) {
     console.warn("Impossible de récupérer les listeners :", err);
     const el = document.getElementById("current-listeners");
     if (el) el.textContent = "Loading listeners...";
   }
 }
+
 
 // premier lancement
 updateRadioInfo();
